@@ -5,4 +5,6 @@
 router-link 是组件，是 vue-componnent 的实例
 编程式导航解决这问题采用的是：自定义属性
 
-1：开发 Search 模块中 typeNav 商品分类菜单（过度动画）
+1：开发 Search 模块中 typeNav 商品分类菜单（过渡动画效果）
+
+过渡动画：前提是组件|元素务必要有 v-if | v-show 这样的指令才可以进行过渡动画

@@ -2,7 +2,7 @@
   <div>
     我是搜索
     <!-- Search模块 -->
-    <typeNav />
+    <TypeNav />
   </div>
 </template>
 

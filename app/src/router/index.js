@@ -61,7 +61,7 @@ export default new VueRouter({
       path: "/Login",
       component: Login,
       meta: {
-        show: true
+        show: false
       }
     },
     {
@@ -76,7 +76,7 @@ export default new VueRouter({
       path: "/Search/:keyword?",
       component: Search,
       meta: {
-        show: false
+        show: true
       },
       //路由组件能不能传递 props 数据？
       //布尔值写法：只能传递params参数，需要在Search中用props接收，不接收的话会出现在attrs中。
