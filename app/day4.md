@@ -8,3 +8,8 @@ router-link 是组件，是 vue-componnent 的实例
 1：开发 Search 模块中 typeNav 商品分类菜单（过渡动画效果）
 
 过渡动画：前提是组件|元素务必要有 v-if | v-show 这样的指令才可以进行过渡动画
+
+2:现在咱们的商品分类三级列表可以进行优化？
+在app根组件当中，发请求【根组件mounted】执行一次
+
+3：合并params与query参数？
