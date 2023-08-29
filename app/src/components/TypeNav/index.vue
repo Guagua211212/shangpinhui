@@ -100,7 +100,7 @@ export default {
     // this.$store.dispatch("categoryList");
     //当组件挂载完毕，让show属性变成false
     //如果不是home路由组件，将typeNav进行隐藏
-    if (this.$route.path != "/home") {
+    if (this.$route.path != "/Home") {
       this.show = false;
     }
   },
@@ -169,6 +169,14 @@ export default {
         location.query = query;
         //路由跳转
         this.$router.push(location);
+        //判断：如果路由跳转的时候带有params参数，捎带着传递过去
+        if (this.$route.params) {
+          location.params = this.$route.params;
+          //整理完参数
+          location.query = query;
+          //路由跳转
+          this.$router.push(location);
+        }
       }
     },
     //鼠标移入，让商品分类列表进行展示

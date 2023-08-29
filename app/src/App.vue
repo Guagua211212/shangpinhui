@@ -24,7 +24,7 @@ export default {
     //派发一个action，获取商品分类的三级列表的数据
     //通知Vuex发请求，获取数据，存储于仓库中
     this.$store.dispatch("categoryList");
-    //虽然main.js文件也只执行一次，但是这个语句不能放在main.js文件中， 因为只有组件才有$store属性
+    //虽然main.js文件也只执行一次，但是这个语句不能放在main.js文件中， 因为只有组件才有$store属性。在main.js中，this是undefined。
   }
 };
 </script>

@@ -111,11 +111,16 @@ export default {
       //答：使用undefined解决：params参数可以传也可以不传（空的字符串）
       /*************************************************************************************************************************************************** */
       //面试题4：路由组件能不能传递 props 数据？
-      this.$router.push({
-        name: "Search",
-        params: { keyword: this.keyword },
-        query: { k: this.keyword.toUpperCase() }
-      });
+      //props一般用于父子组件通信
+      //可以的：三种写法
+      //详解在router文件夹index.vue文件中
+      if (this.$route.query) {
+        this.$router.push({
+          name: "Search",
+          params: { keyword: this.keyword || undefined },
+          query: { k: this.keyword.toUpperCase() }
+        });
+      }
     }
   }
 };
