@@ -3,34 +3,13 @@
     <div class="sortList clearfix">
       <div class="center">
         <!--banner轮播-->
-        <div class="swiper-container" id="mySwiper">
-          <div class="swiper-wrapper">
-            <div class="swiper-slide">
-              <img src="./images/banner1.jpg" />
-            </div>
-            <div class="swiper-slide">
-              <img src="./images/banner2.jpg" />
-            </div>
-            <div class="swiper-slide">
-              <img src="./images/banner3.jpg" />
-            </div>
-            <div class="swiper-slide">
-              <img src="./images/banner4.jpg" />
-            </div>
-          </div>
-          <!-- 如果需要分页器 -->
-          <div class="swiper-pagination"></div>
-
-          <!-- 如果需要导航按钮 -->
-          <div class="swiper-button-prev"></div>
-          <div class="swiper-button-next"></div>
-        </div>
+        <Carousel :list="bannerList" />
       </div>
       <div class="right">
         <div class="news">
           <h4>
             <em class="fl">尚品汇快报</em>
-            <span class="fr tip">更多 ></span>
+            <span class="fr tip">更多</span>
           </h4>
           <div class="clearix"></div>
           <ul class="news-list unstyled">
@@ -115,8 +94,54 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+//引包
+import Swiper from "swiper/js/swiper.min.js";
 export default {
-  name: "ListContainer"
+  name: "ListContainer",
+  //mounted：组件挂载完毕，正常说组件结构（DOM）已经全有了，
+  //但是为什么swiper实例在mounted当中直接书写不行？--因为结构还没有完整
+  mounted() {
+    //派发action，通知vuex发起ajax请求，将数据仓储在仓库当中
+    this.$store.dispatch("getBannerList");
+    //在new swiper之前，页面中的结构必须要有。【老师把new swiper放在mounted这里发现没有用】
+    //为什么呐？因为结构还不完整。因为dispatch当中涉及到异步语句，导致v-for遍历的时候还没有
+  },
+  computed: {
+    ...mapState({
+      bannerList: state => state.home.bannerList
+    })
+  },
+  watch: {
+    //监听bannerList数据的变化：因为这条数据发生过变化----由空数组变成由四个元素的数组
+    bannerList: {
+      handler(newValue, oldValue) {
+        //初始化Swiper类的实例
+        //如果执行handler方法，代表组件实例身上这个属性的属性值已经有了【数组：四个元素】
+        //当前的数据执行，只能保证bannerList数据已经有了，但是v-for是否渲染完毕，无从得知。【v-for执行完毕，才算是结构完整】
+        //nextTick：在下次DOM更新循环结束之后执行延迟回调。在修改数据之后立即使用这个方法，获取更新后的DOM。
+        this.$nextTick(() => {
+          var mySwiper = new Swiper(
+            //
+            this.$refs.mySwiper,
+            {
+              loop: true,
+              // 如果需要分页器
+              pagination: {
+                el: ".swiper-pagination",
+                clickable: true
+              },
+              // 如果需要前进后退按钮
+              navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev"
+              }
+            }
+          );
+        });
+      }
+    }
+  }
 };
 </script>
 
@@ -293,3 +318,6 @@ export default {
   }
 }
 </style>
+
+// // 第一步：引包（相应的js|css） // 第二步：页面中结构务必要有 // //
+第三步（页面当中务必要有结构）：new Swiper实例【轮播图添加动态效果】
