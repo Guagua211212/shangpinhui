@@ -32,7 +32,7 @@ const actions = {
   //获取首页轮播图的数据
   async getBannerList({ commit }) {
     let result = await reqGetBannerList();
-    console.log(result);
+    // console.log(result);
     if (result.code == 200) {
       commit("GETBANNERLIST", result.data);
     }

@@ -35,7 +35,7 @@ export default {
       //为什么watch监听不到list的变化？因为这是父组件home给的数据，传到子组件floor后没有变化，这个数据是一个对象，对象里面的数据该有的都已经有了。
       immediate: true, //不管你数据变化与否，上来立即监听一次
       handler() {
-        console.log("list");
+        // console.log("list");
         //之呢个监听到数据已经有了，但是v-for动态渲染结构我们还是没有办法确定，因此还是需要用nextTick
         this.$nextTick(() => {
           var mySwiper = new Swiper(this.$refs.cur, {

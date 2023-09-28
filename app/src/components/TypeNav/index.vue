@@ -18,7 +18,7 @@
                 <h3 @mouseenter="changeIndex(index)">
                   <a
                     :data-categoryName="c1.categoryName"
-                    :data-category1Id="c1.categoryId"
+                    :data-category1id="c1.categoryId"
                   >
                     {{ c1.categoryName }}--{{ index }}
                   </a>
@@ -39,7 +39,7 @@
                       <dt>
                         <a
                           :data-categoryName="c2.categoryName"
-                          :data-category2Id="c2.categoryId"
+                          :data-category2id="c2.categoryId"
                         >
                           {{ c2.categoryName }}
                         </a>
@@ -49,7 +49,7 @@
                         <em v-for="c3 in c2.categoryChild" :key="c3.categoryId">
                           <a
                             :data-categoryName="c3.categoryName"
-                            :data-category3Id="c3.categoryId"
+                            :data-category3id="c3.categoryId"
                           >
                             {{ c3.categoryName }}
                           </a>
@@ -159,11 +159,11 @@ export default {
         let query = { categoryName: categoryname };
         //一二三级分类的a标签
         if (category1id) {
-          query.category1id = category1id;
+          query.category1Id = category1id;
         } else if (category2id) {
-          query.category2id = category2id;
+          query.category2Id = category2id;
         } else {
-          query.category3id = category3id;
+          query.category3Id = category3id;
         }
         //整理完参数
         location.query = query;
