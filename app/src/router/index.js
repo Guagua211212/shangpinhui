@@ -73,7 +73,7 @@ export default new VueRouter({
     },
     {
       name: "Search",
-      path: "/Search/:keyword",
+      path: "/Search/:keyword?", //这个？表示这个参数可以传递也可以不传递
       component: Search,
       meta: {
         show: true

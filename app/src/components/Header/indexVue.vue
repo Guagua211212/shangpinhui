@@ -114,14 +114,29 @@ export default {
       //props一般用于父子组件通信
       //可以的：三种写法
       //详解在router文件夹index.vue文件中
+      // if (this.$route.query) {
+      //   this.$router.push({
+      //     name: "Search",
+      //     params: { keyword: this.keyword || undefined },
+      //     query: { k: this.keyword.toUpperCase() }
+      //   });
+      // }
+      let location = {
+        name: "Search",
+        params: { keyword: this.keyword || undefined }
+      };
       if (this.$route.query) {
-        this.$router.push({
-          name: "Search",
-          params: { keyword: this.keyword || undefined },
-          query: { k: this.keyword.toUpperCase() }
-        });
+        location.query = this.$route.query;
       }
+      Object.assign(location.query, { k: this.keyword.toUpperCase() });
+      this.$router.push(location);
     }
+  },
+  mounted() {
+    //通过全局事件总线清除关键字
+    this.$bus.$on("clear", () => {
+      this.keyword = "";
+    });
   }
 };
 </script>

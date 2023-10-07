@@ -12,15 +12,26 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
+            <!-- 分类的面包屑 -->
             <li class="with-x" v-if="searchParams.categoryName">
               {{ searchParams.categoryName }}
               <i @click="removeCategoryName">x</i>
+            </li>
+            <!-- 关键字的面包屑 -->
+            <li class="with-x" v-if="searchParams.keyword">
+              {{ searchParams.keyword }}
+              <i @click="removeKeyword">x</i>
+            </li>
+            <!-- 品牌的面包屑 -->
+            <li class="with-x" v-if="searchParams.trademark">
+              {{ searchParams.trademark.split(":")[1] }}
+              <i @click="removeTrademark">x</i>
             </li>
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector />
+        <SearchSelector @trademarkInfo="trademarkInfo" />
 
         <!--details-->
         <div class="details clearfix">
@@ -210,10 +221,41 @@ export default {
     //删除分类的名字
     removeCategoryName() {
       //把带给服务器的参数置空了，还需要向服务器发请求
-      this.searchParams.categoryName = "";
-      this.searchParams.category1Id = "";
-      this.searchParams.category2Id = "";
-      this.searchParams.category3Id = "";
+      //带给服务器的参数说明可有可无的：如果属性为空的字符串还是会把相应的字段带给服务器
+      //但是，把相应的字段变为undefined，当前字段不会带给服务器
+      this.searchParams.categoryName = undefined;
+      this.searchParams.category1Id = undefined;
+      this.searchParams.category2Id = undefined;
+      this.searchParams.category3Id = undefined;
+      this.getData();
+      //地址栏也需要修改，进行路由的跳转【现在的路由跳转只是跳转到自己这里】
+      //严谨：本意是删除query参数，如果路径当中出现了params参数不应该删除，但是路由跳转的时候应该带过去。
+      if (this.$route.params) {
+        this.$router.push({ name: "Search", params: this.$route.params });
+      }
+    },
+    removeKeyword() {
+      //给服务器带的参数searchParams的keyword置空
+      this.searchParams.keyword = undefined;
+      //再次发请求
+      this.getData();
+      //通知兄弟组件Header清楚关键字
+      this.$bus.$emit("clear");
+      //进行路由的跳转
+      this.$router.push({ name: "Search" });
+    },
+    //自定义事件回调
+    trademarkInfo(trademark) {
+      //1、整理品牌字段参数，“ID：品牌名”
+      this.searchParams.trademark = `${trademark.tmId}:${trademark.tmName}`;
+      //再次发请求获取search模块列表数据进行展示
+      this.getData();
+    },
+    //删除品牌的信息
+    removeTrademark() {
+      //将品牌信息置空
+      this.searchParams.trademark = undefined;
+      //再次发请求
       this.getData();
     }
   },
@@ -227,9 +269,9 @@ export default {
       this.getData();
       //每一次请求完毕，应该把相应的1、2、3级分类的id置空，让他接收下一次的相应的1、2、3id
       //分类名字与关键字不用清理：因为每一次路由发生变化的时候，都会赋予他新的值
-      this.searchParams.category1Id = "";
-      this.searchParams.category2Id = "";
-      this.searchParams.category3Id = "";
+      this.searchParams.category1Id = undefined;
+      this.searchParams.category2Id = undefined;
+      this.searchParams.category3Id = undefined;
     }
   }
 };
