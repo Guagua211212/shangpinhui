@@ -27,34 +27,52 @@
               {{ searchParams.trademark.split(":")[1] }}
               <i @click="removeTrademark">x</i>
             </li>
+            <!-- 平台售卖属性的面包屑 -->
+            <li
+              class="with-x"
+              v-for="(attrValue, index) in searchParams.props"
+              :key="index"
+            >
+              {{ attrValue.split(":")[1] }}
+              <i @click="removeAttr(index)">x</i>
+            </li>
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector @trademarkInfo="trademarkInfo" />
+        <SearchSelector @trademarkInfo="trademarkInfo" @attrInfo="attrInfo" />
 
         <!--details-->
         <div class="details clearfix">
           <div class="sui-navbar">
             <div class="navbar-inner filter">
+              <!-- 排序的结构 -->
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+                <li :class="{ active: isOne }">
+                  <a>
+                    综合
+                    <span
+                      v-show="isOne"
+                      class="iconfont"
+                      :class="{
+                        'icon-direction-down': isAsc,
+                        'icon-direction-up': isDesc
+                      }"
+                    ></span>
+                  </a>
                 </li>
-                <li>
-                  <a href="#">销量</a>
-                </li>
-                <li>
-                  <a href="#">新品</a>
-                </li>
-                <li>
-                  <a href="#">评价</a>
-                </li>
-                <li>
-                  <a href="#">价格⬆</a>
-                </li>
-                <li>
-                  <a href="#">价格⬇</a>
+                <li :class="{ active: isTwo }">
+                  <a>
+                    销量
+                    <span
+                      v-show="isTwo"
+                      class="iconfont"
+                      :class="{
+                        'icon-direction-down': isAsc,
+                        'icon-direction-up': isDesc
+                      }"
+                    ></span>
+                  </a>
                 </li>
               </ul>
             </div>
@@ -167,8 +185,8 @@ export default {
         categoryName: "",
         //关键字
         keyword: "",
-        //排序
-        order: "",
+        //排序：初始的状态应该是综合、降序--1：desc
+        order: "2:asc",
         //分页器用的参数，表示当前是第几页
         pageNo: 1,
         //每一页展示的数据个数
@@ -209,7 +227,19 @@ export default {
     //   goodsList: state => state.search.searchList.goodsList //这种写法获取数据是可以的，但是比较麻烦，可以在仓库里直接处理好，再获取过来|使用getters
     // })
     //mapGetters里面的写法，传递的是数组，因为getters计算是没有划分模块的【home，Search】
-    ...mapGetters(["goodsList"])
+    ...mapGetters(["goodsList"]),
+    isOne() {
+      return this.searchParams.order.indexOf("1") != -1;
+    },
+    isTwo() {
+      return this.searchParams.order.indexOf("2") != -1;
+    },
+    isAsc() {
+      return this.searchParams.order.indexOf("asc") != -1;
+    },
+    isDesc() {
+      return this.searchParams.order.indexOf("desc") != -1;
+    }
   },
   methods: {
     //向服务器发请求获取search模块数据（根据参数不同返回不同的数据进行展示）
@@ -256,6 +286,28 @@ export default {
       //将品牌信息置空
       this.searchParams.trademark = undefined;
       //再次发请求
+      this.getData();
+    },
+    //收集平台属性地方回调函数（自定义事件）
+    attrInfo(attr, attrValue) {
+      console.log(attr, attrValue);
+      //参数格式整理好
+      let props = `${attr.attrId}:${attrValue}:${attr.attrName}`;
+      //数组去重
+      if (this.searchParams.props.indexOf(props) == -1)
+        //数组中没有这个属性，返回值是-1
+        //if语句中只有一句可以省略大括号，这里就省略了
+        this.searchParams.props.push(props);
+
+      //再次发请求
+      this.getData();
+    },
+    //删除售卖属性
+    removeAttr(index) {
+      console.log(index);
+      //再次整理参数
+      this.searchParams.props.splice(index, 1);
+      //再次发送请求
       this.getData();
     }
   },

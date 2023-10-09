@@ -19,15 +19,23 @@
         <a href="javascript:void(0);">更多</a>
       </div>
     </div>
+
+    <!-- 平台售卖属性的地方 -->
     <div
       class="type-wrap"
       v-for="(attr, index) in attrsList"
       :key="attr.attrId"
     >
+      <!-- 平台售卖的属性：比如说颜色 -->
       <div class="fl key">{{ attr.attrName }}</div>
       <div class="fl value">
         <ul class="type-list">
-          <li v-for="(attrValue, index) in attr.attrValueList" :key="index">
+          <!-- 平台相应的售卖的属性的属性值：粉色蓝色黑色 -->
+          <li
+            v-for="(attrValue, index) in attr.attrValueList"
+            :key="index"
+            @click="attrInfo(attr, attrValue)"
+          >
             <a>{{ attrValue }}</a>
           </li>
         </ul>
@@ -52,6 +60,12 @@ export default {
       //答：在父组件中发请求
       //为什么呢？因为父组件中searchParams参数是带给服务器的参数，子组件把你点击的品牌信息，需要给父组件传递过去
       this.$emit("trademarkInfo", trademark);
+    },
+    //平台售卖属性值的点击事件
+    attrInfo(attr, attrValue) {
+      //【“属性ID：属性值：属性名”】
+      // console.log(attrValue);
+      this.$emit("attrInfo", attr, attrValue);
     }
   }
 };
