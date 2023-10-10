@@ -1,27 +1,89 @@
 <template>
   <div class="pagination">
-    <button>上一页</button>
-    <button>1</button>
+    <!-- 上 -->
+    <button :disabled="pageNo == 1" @click="$emit('getPageNo', pageNo - 1)">
+      上一页
+    </button>
+    <button
+      v-if="startNumAndEndNum.start > 1"
+      @click="$emit('getPageNo', 1)"
+      :class="{ active: pageNo == 1 }"
+    >
+      1
+    </button>
 
-    <button>···</button>
+    <button v-if="startNumAndEndNum.start > 2">···</button>
 
-    <button>3</button>
-    <button>4</button>
-    <button>5</button>
-    <button>6</button>
-    <button>7</button>
+    <!-- 中间部分 -->
+    <button
+      v-for="(page, index) in startNumAndEndNum.end"
+      :key="index"
+      v-show="page >= startNumAndEndNum.start"
+      @click="$emit('getPageNo', page)"
+      :class="{ active: pageNo == page }"
+    >
+      {{ page }}
+    </button>
 
-    <button>···</button>
-    <button>9</button>
-    <button>下一页</button>
+    <!-- 下 -->
+    <button v-if="startNumAndEndNum.end < this.totalPage - 1">···</button>
+    <button
+      v-if="startNumAndEndNum.end < this.totalPage"
+      @click="$emit('getPageNo', totalPage)"
+      :class="{ active: pageNo == totalPage }"
+    >
+      {{ totalPage }}
+    </button>
+    <button
+      :disabled="pageNo == totalPage"
+      @click="$emit('getPageNo', pageNo + 1)"
+    >
+      下一页
+    </button>
 
-    <button style="margin-left: 30px">共 60 条</button>
+    <button style="margin-left: 30px">共 {{ total }} 条</button>
   </div>
 </template>
 
 <script>
 export default {
-  name: "Pagination"
+  name: "Pagination",
+  props: ["pageNo", "pageSize", "total", "continues"],
+  computed: {
+    //计算总共有多少页
+    totalPage() {
+      return Math.ceil(this.total / this.pageSize);
+    },
+    //计算出连续的页码的起始数字与结束数字【连续的页码数量至少是5】
+    startNumAndEndNum() {
+      const { continues, pageNo, totalPage, pageSize } = this;
+      //先定义两个变量，存储起始数字和结束数字
+      let start = 0,
+        end = 0;
+      //连续页码数字是5【就是至少5项】，如果出现不正常的现象【就是不够5页】
+      //不正常现象，总页数没有应该连续的页码多
+      if (continues > this.totalPage) {
+        start = 1;
+        end = this.totalPage;
+      } else {
+        //正常现象【连续页码是5，总页数大于5】
+        //起始数字
+        start = pageNo - parseInt(continues / 2);
+        //结束数字
+        end = pageNo + parseInt(continues / 2);
+        //把不正常的现象【start数字出现0|负数】纠正
+        if (start < 1) {
+          start = 1;
+          end = continues;
+        }
+        if (end > this.totalPage) {
+          end = this.totalPage;
+          start = this.totalPage - continues + 1;
+        }
+      }
+      return { start, end };
+    }
+  }
 };
 </script>
 

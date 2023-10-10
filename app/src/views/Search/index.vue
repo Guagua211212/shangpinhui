@@ -55,8 +55,8 @@
                       v-show="isOne"
                       class="iconfont"
                       :class="{
-                        'icon-direction-down': isDesc,
-                        'icon-direction-up': isAsc
+                        'icon-direction-down': isAsc,
+                        'icon-direction-up': isDesc
                       }"
                     ></span>
                   </a>
@@ -68,8 +68,8 @@
                       v-show="isTwo"
                       class="iconfont"
                       :class="{
-                        'icon-direction-down': isDesc,
-                        'icon-direction-up': isAsc
+                        'icon-direction-down': isAsc,
+                        'icon-direction-up': isDesc
                       }"
                     ></span>
                   </a>
@@ -87,9 +87,9 @@
               >
                 <div class="list-wrap">
                   <div class="p-img">
-                    <a href="item.html" target="_blank">
+                    <router-link :to="`/Detail/${good.id}`">
                       <img :src="good.defaultImg" />
-                    </a>
+                    </router-link>
                   </div>
                   <div class="price">
                     <strong>
@@ -129,8 +129,14 @@
               </li>
             </ul>
           </div>
-          <!-- 分页器 -->
-          <Pagination />
+          <!-- 分页器：测试阶段，这里的预设数据将来要替换的 -->
+          <Pagination
+            :pageNo="searchParams.pageNo"
+            :pageSize="searchParams.pageSize"
+            :total="total"
+            :continues="5"
+            @getPageNo="getPageNo"
+          />
         </div>
       </div>
     </div>
@@ -139,7 +145,7 @@
 
 <script>
 import { watch } from "vue";
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import SearchSelector from "./SearchSelector/SearchSelector";
 
 export default {
@@ -161,7 +167,7 @@ export default {
         //排序：初始的状态应该是综合、降序--1：desc
         order: "1:desc",
         //分页器用的参数，表示当前是第几页
-        pageNo: 1,
+        pageNo: 21,
         //每一页展示的数据个数
         pageSize: 10,
         //平台售卖属性操作带的参数
@@ -196,9 +202,9 @@ export default {
     // console.log(this.searchParams);
   },
   computed: {
-    // ...mapState({
-    //   goodsList: state => state.search.searchList.goodsList //这种写法获取数据是可以的，但是比较麻烦，可以在仓库里直接处理好，再获取过来|使用getters
-    // })
+    ...mapState({
+      // goodsList: state => state.Search.searchList.goodsList //这种写法获取数据是可以的，但是比较麻烦，可以在仓库里直接处理好，再获取过来|使用getters
+    }),
     //mapGetters里面的写法，传递的是数组，因为getters计算是没有划分模块的【home，Search】
     ...mapGetters(["goodsList"]),
     isOne() {
@@ -212,7 +218,13 @@ export default {
     },
     isDesc() {
       return this.searchParams.order.indexOf("desc") != -1;
-    }
+    },
+    //获取search模块展示产品一共多少数据
+    ...mapState({
+      total: state => state.Search.searchList.total
+    })
+    //这里是使用mapState行不通，所以用了getter的方法，但是解决了，行不通的原因是Search没有大写
+    // ...mapGetters(["total"])
   },
   methods: {
     //向服务器发请求获取search模块数据（根据参数不同返回不同的数据进行展示）
@@ -302,6 +314,13 @@ export default {
       }
       //将新的order赋予searchParams
       this.searchParams.order = newOrder;
+      //再次发请求
+      this.getData();
+    },
+    //自定义事件回调函数----获取当前第几页
+    getPageNo(pageNo) {
+      //整理带给服务器的参数
+      this.searchParams.pageNo = pageNo;
       //再次发请求
       this.getData();
     }

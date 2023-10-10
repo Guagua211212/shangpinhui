@@ -38,6 +38,10 @@ const getters = {
   attrsList(state) {
     return state.searchList.attrsList;
   }
+  //这里是使用mapState行不通，所以用了getter的方法，但是解决了，行不通的原因是Search没有大写
+  // total(state) {
+  //   return state.searchList.total;
+  // }
 };
 export default {
   state,
