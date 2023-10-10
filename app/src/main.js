@@ -5,9 +5,12 @@ import App from "./App.vue";
 import TypeNav from "@/components/TypeNav";
 //引入全局组件Carousel
 import Carousel from "@/components/Carousel";
+//引入全局组件Pagination
+import Pagination from "@/components/Pagination";
 //第一个参数：全局组件的名字    第二个参数：哪个组件
 Vue.component(TypeNav.name, TypeNav);
 Vue.component(Carousel.name, Carousel);
+Vue.component(Pagination.name, Pagination);
 
 //引入MockServer.js-----mock数据
 import "@/mock/mockServer";

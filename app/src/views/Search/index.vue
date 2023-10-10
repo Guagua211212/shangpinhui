@@ -48,28 +48,28 @@
             <div class="navbar-inner filter">
               <!-- 排序的结构 -->
               <ul class="sui-nav">
-                <li :class="{ active: isOne }">
+                <li :class="{ active: isOne }" @click="changeOrder('1')">
                   <a>
                     综合
                     <span
                       v-show="isOne"
                       class="iconfont"
                       :class="{
-                        'icon-direction-down': isAsc,
-                        'icon-direction-up': isDesc
+                        'icon-direction-down': isDesc,
+                        'icon-direction-up': isAsc
                       }"
                     ></span>
                   </a>
                 </li>
-                <li :class="{ active: isTwo }">
+                <li :class="{ active: isTwo }" @click="changeOrder('2')">
                   <a>
-                    销量
+                    价格
                     <span
                       v-show="isTwo"
                       class="iconfont"
                       :class="{
-                        'icon-direction-down': isAsc,
-                        'icon-direction-up': isDesc
+                        'icon-direction-down': isDesc,
+                        'icon-direction-up': isAsc
                       }"
                     ></span>
                   </a>
@@ -129,35 +129,8 @@
               </li>
             </ul>
           </div>
-          <div class="fr page">
-            <div class="sui-pagination clearfix">
-              <ul>
-                <li class="prev disabled">
-                  <a href="#">«上一页</a>
-                </li>
-                <li class="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">5</a>
-                </li>
-                <li class="dotted"><span>...</span></li>
-                <li class="next">
-                  <a href="#">下一页»</a>
-                </li>
-              </ul>
-              <div><span>共10页&nbsp;</span></div>
-            </div>
-          </div>
+          <!-- 分页器 -->
+          <Pagination />
         </div>
       </div>
     </div>
@@ -186,7 +159,7 @@ export default {
         //关键字
         keyword: "",
         //排序：初始的状态应该是综合、降序--1：desc
-        order: "2:asc",
+        order: "1:desc",
         //分页器用的参数，表示当前是第几页
         pageNo: 1,
         //每一页展示的数据个数
@@ -308,6 +281,28 @@ export default {
       //再次整理参数
       this.searchParams.props.splice(index, 1);
       //再次发送请求
+      this.getData();
+    },
+    //排序的操作
+    changeOrder(flag) {
+      //flag形参：它是一个标记，代表用户点击的是 1综合 还是 2价格
+      let originOrder = this.searchParams.order;
+      let originFlag = this.searchParams.order.split(":")[0];
+      let originSort = this.searchParams.order.split(":")[1];
+      console.log(originOrder, originFlag, originSort, flag);
+      //准备一个新的order的属性值
+      let newOrder = "";
+      //这个语句能够确定点击的一定是1综合
+      if (flag == originFlag) {
+        //点击的是1综合
+        newOrder = `${originFlag}:${originSort == "desc" ? "asc" : "desc"}`;
+      } else {
+        //点击的是2价格
+        newOrder = `${flag}:${"desc"}`;
+      }
+      //将新的order赋予searchParams
+      this.searchParams.order = newOrder;
+      //再次发请求
       this.getData();
     }
   },
