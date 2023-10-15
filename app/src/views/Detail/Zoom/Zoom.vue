@@ -1,76 +1,88 @@
 <template>
   <div class="spec-preview">
-    <img src="../images/s1.png" />
+    <!-- 这里在浏览器会报错，错误是reading这个0的时候是undefined，原因是在渲染的时候，state里面skuInfo这个对象是空的 -->
+    <img :src="imgObj" />
     <div class="event"></div>
     <div class="big">
-      <img src="../images/s1.png" />
+      <img :src="imgObj" />
     </div>
     <div class="mask"></div>
   </div>
 </template>
 
 <script>
-  export default {
-    name: "Zoom",
+export default {
+  name: "Zoom",
+  props: ["skuImageList"],
+  // //测试父亲给的数据---确实是undefined，所以去父组件那里解决问题
+  // mounted() {
+  //   console.log(this.skuImageList);
+  // },
+  //在父组件给skuImageList处理后仍然有报错，原因是imgUrl是undefined，这个警告的解决方法一样---至此，解决了这次的警告问题。
+  computed: {
+    imgObj() {
+      return this.skuImageList || {};
+    }
   }
+};
 </script>
 
 <style lang="less">
-  .spec-preview {
-    position: relative;
-    width: 400px;
-    height: 400px;
-    border: 1px solid #ccc;
+.spec-preview {
+  position: relative;
+  width: 400px;
+  height: 400px;
+  border: 1px solid #ccc;
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .event {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 998;
+  }
+
+  .mask {
+    width: 50%;
+    height: 50%;
+    background-color: rgba(0, 255, 0, 0.3);
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: none;
+  }
+
+  .big {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: -1px;
+    left: 100%;
+    border: 1px solid #aaa;
+    overflow: hidden;
+    z-index: 998;
+    display: none;
+    background: white;
 
     img {
-      width: 100%;
-      height: 100%;
-    }
-
-    .event {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 998;
-    }
-
-    .mask {
-      width: 50%;
-      height: 50%;
-      background-color: rgba(0, 255, 0, 0.3);
+      width: 200%;
+      max-width: 200%;
+      height: 200%;
       position: absolute;
       left: 0;
       top: 0;
-      display: none;
-    }
-
-    .big {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: -1px;
-      left: 100%;
-      border: 1px solid #aaa;
-      overflow: hidden;
-      z-index: 998;
-      display: none;
-      background: white;
-
-      img {
-        width: 200%;
-        max-width: 200%;
-        height: 200%;
-        position: absolute;
-        left: 0;
-        top: 0;
-      }
-    }
-
-    .event:hover~.mask,
-    .event:hover~.big {
-      display: block;
     }
   }
+
+  .event:hover ~ .mask,
+  .event:hover ~ .big {
+    display: block;
+  }
+}
 </style>

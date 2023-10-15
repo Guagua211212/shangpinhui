@@ -48,13 +48,14 @@
 <script>
 export default {
   name: "Pagination",
+  //父组件传递给字符串的数据：当前页，每一页展示多少数据，数据总个数，连续页码数
   props: ["pageNo", "pageSize", "total", "continues"],
   computed: {
     //计算总共有多少页
     totalPage() {
       return Math.ceil(this.total / this.pageSize);
     },
-    //计算出连续的页码的起始数字与结束数字【连续的页码数量至少是5】
+    //计算出连续的页码的起始数字与结束数字【连续的页码数量至少是5】【这个很重要，是分页器的重点】
     startNumAndEndNum() {
       const { continues, pageNo, totalPage, pageSize } = this;
       //先定义两个变量，存储起始数字和结束数字
