@@ -1,10 +1,10 @@
 <template>
   <div class="spec-preview">
     <!-- 这里在浏览器会报错，错误是reading这个0的时候是undefined，原因是在渲染的时候，state里面skuInfo这个对象是空的 -->
-    <img :src="imgObj" />
+    <img :src="imgObj.imgUrl" />
     <div class="event"></div>
     <div class="big">
-      <img :src="imgObj" />
+      <img :src="imgObj.imgUrl" />
     </div>
     <div class="mask"></div>
   </div>
@@ -21,7 +21,7 @@ export default {
   //在父组件给skuImageList处理后仍然有报错，原因是imgUrl是undefined，这个警告的解决方法一样---至此，解决了这次的警告问题。
   computed: {
     imgObj() {
-      return this.skuImageList || {};
+      return this.skuImageList[0] || {};
     }
   }
 };
