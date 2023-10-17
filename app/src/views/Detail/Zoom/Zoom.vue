@@ -13,6 +13,11 @@
 <script>
 export default {
   name: "Zoom",
+  data() {
+    return {
+      currentIndex: 0
+    };
+  },
   props: ["skuImageList"],
   // //测试父亲给的数据---确实是undefined，所以去父组件那里解决问题
   // mounted() {
@@ -21,8 +26,16 @@ export default {
   //在父组件给skuImageList处理后仍然有报错，原因是imgUrl是undefined，这个警告的解决方法一样---至此，解决了这次的警告问题。
   computed: {
     imgObj() {
-      return this.skuImageList[0] || {};
+      return this.skuImageList[this.currentIndex] || {};
     }
+  },
+  mounted() {
+    //全局事件总线：获取兄弟组件传递过来的索引值
+    this.$bus.$on("getIndex", index => {
+      // console.log(index);
+      //修改当前响应式数据
+      this.currentIndex = index;
+    });
   }
 };
 </script>
