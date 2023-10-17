@@ -93,6 +93,12 @@
                     spuSaleAttrValue, index
                   ) in spuSaleAttr.spuSaleAttrValueList"
                   :key="spuSaleAttrValue.id"
+                  @click="
+                    changeActive(
+                      spuSaleAttrValue,
+                      spuSaleAttr.spuSaleAttrValueList
+                    )
+                  "
                 >
                   {{ spuSaleAttrValue.saleAttrValueName }}
                 </dd>
@@ -365,6 +371,17 @@ export default {
     //给子组件的数据，因为直接给可能会给一个空对象，造成服务器报错undefined，所以重新计算一个属性出来
     skuImageList() {
       return this.skuInfo.skuImageList || [];
+    }
+  },
+  methods: {
+    //产品的售卖属性值切换高亮
+    changeActive(SaleAttrValue, arr) {
+      //遍历全部售卖属性值isChecked为零，没有高亮了
+      arr.forEach(item => {
+        item.isChecked = 0;
+      });
+      //点击的那个售卖属性值是高亮的
+      SaleAttrValue.isChecked = 1;
     }
   }
 };
