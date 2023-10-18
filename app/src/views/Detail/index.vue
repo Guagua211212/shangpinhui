@@ -122,7 +122,8 @@
                 </a>
               </div>
               <div class="add">
-                <a href="javascript:">加入购物车</a>
+                <!-- 以前路由跳转，是从a路由跳转到b路由，而这里在加入购物车，进行路由跳转之前，发请求，把购买的产品信息通过请求的形式通知服务器，服务器进行相应的存储 -->
+                <a href="javascript:" @click="addShopCar">加入购物车</a>
               </div>
             </div>
           </div>
@@ -410,6 +411,30 @@ export default {
         //正常，但是小数在这里取整了
         this.skuNum = parseInt(value);
       }
+    },
+    //加入购物车的回调函数
+    async addShopCar() {
+      //派发action
+      //1、发请求---将产品加入到数据库（通知服务器）
+      //当前这里是派发了一个action，也向服务器发请求了
+      //判断加入购物车成功了还是失败了,进行相应的操作
+      // this.$store.dispatch("addOrUpdateShopCart", {
+      //         skuId: this.$route.params.skuid,
+      //         skuNum: this.skuNum
+      //       });
+      //以上代码其实就是在调用仓库中的addOrUpdateShopCart,这个方法加了async，所以返回一定是一个Promis，结果只有成功或者失败
+
+      try {
+        await this.$store.dispatch("addOrUpdateShopCart", {
+          skuId: this.$route.params.skuid,
+          skuNum: this.skuNum
+        });
+      } catch (error) {
+        alert(error.message);
+      }
+      // console.log(result);
+      //2、服务器存储成功---进行路由跳转
+      //3、失败，给用户进行提示
     }
   }
 };

@@ -275,7 +275,7 @@ export default {
     },
     //收集平台属性地方回调函数（自定义事件）
     attrInfo(attr, attrValue) {
-      console.log(attr, attrValue);
+      // console.log(attr, attrValue);
       //参数格式整理好
       let props = `${attr.attrId}:${attrValue}:${attr.attrName}`;
       //数组去重
@@ -289,7 +289,7 @@ export default {
     },
     //删除售卖属性
     removeAttr(index) {
-      console.log(index);
+      // console.log(index);
       //再次整理参数
       this.searchParams.props.splice(index, 1);
       //再次发送请求
@@ -301,7 +301,7 @@ export default {
       let originOrder = this.searchParams.order;
       let originFlag = this.searchParams.order.split(":")[0];
       let originSort = this.searchParams.order.split(":")[1];
-      console.log(originOrder, originFlag, originSort, flag);
+      // console.log(originOrder, originFlag, originSort, flag);
       //准备一个新的order的属性值
       let newOrder = "";
       //这个语句能够确定点击的一定是1综合
