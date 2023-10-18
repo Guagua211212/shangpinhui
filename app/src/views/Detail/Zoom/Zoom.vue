@@ -2,11 +2,12 @@
   <div class="spec-preview">
     <!-- 这里在浏览器会报错，错误是reading这个0的时候是undefined，原因是在渲染的时候，state里面skuInfo这个对象是空的 -->
     <img :src="imgObj.imgUrl" />
-    <div class="event"></div>
+    <div class="event" @mousemove="handler"></div>
     <div class="big">
-      <img :src="imgObj.imgUrl" />
+      <img :src="imgObj.imgUrl" ref="big" />
     </div>
-    <div class="mask"></div>
+    <!-- 绿色的遮罩层 -->
+    <div class="mask" ref="mask"></div>
   </div>
 </template>
 
@@ -36,6 +37,25 @@ export default {
       //修改当前响应式数据
       this.currentIndex = index;
     });
+  },
+  methods: {
+    handler(event) {
+      // console.log("123");
+      let mask = this.$refs.mask;
+      let big = this.$refs.big;
+      let left = event.offsetX - mask.offsetWidth / 2;
+      let top = event.offsetY - mask.offsetHeight / 2;
+      if (left <= 0) left = 0;
+      if (left >= mask.offsetWidth) left = mask.offsetWidth;
+      if (top <= 0) top = 0;
+      if (top >= mask.offsetHeight) top = mask.offsetHeight;
+
+      //修改元素的left|top属性值
+      mask.style.left = left + "px";
+      mask.style.top = top + "px";
+      big.style.left = -2 * left + "px";
+      big.style.top = -2 * top + "px";
+    }
   }
 };
 </script>
