@@ -424,19 +424,31 @@ export default {
       //       });
       //以上代码其实就是在调用仓库中的addOrUpdateShopCart,这个方法加了async，所以返回一定是一个Promis，结果只有成功或者失败
 
+      //2、需要知道这次请求是失败还是成功，如果成功则进行路由跳转，如果失败则给用户提示
       try {
         await this.$store.dispatch("addOrUpdateShopCart", {
           skuId: this.$route.params.skuid,
           skuNum: this.skuNum
         });
-        //进行路由的跳转
-        this.$router.push({ name: "addcartsuccess" });
+        //3、进行路由的跳转
+        //4、在路由跳转的时候还需要将产品信息带给下一级的路由组件
+        //下面这种手段路由跳转，可以，但是会在网页路径中留下很长的一串字符，可以用本地存储，解决这个问题
+        // this.$router.push({
+        //   name: "addcartsuccess",
+        //   query: { skuInfo: this.skuInfo, skuNum: this.skuNum }
+        // });
+        //一些简单的数据skuNum，通过query形式传递给路由组件
+        //产品信息的数据比较复杂【skuInfo】，通过会话存储（优点是：不持久化，会话结束数据就消失)
+        //本地存储和会话存储：一般存储的都是字符串，需要转化为字符串
+        sessionStorage.setItem("SKUINFO", JSON.stringify(this.skuInfo));
+        this.$router.push({
+          name: "addcartsuccess",
+          query: { skuNum: this.skuNum }
+        });
       } catch (error) {
         alert(error.message);
       }
       // console.log(result);
-      //2、服务器存储成功---进行路由跳转
-      //3、失败，给用户进行提示
     }
   }
 };
