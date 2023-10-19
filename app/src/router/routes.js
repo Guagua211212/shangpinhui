@@ -5,6 +5,7 @@ import Register from "@/views/Register";
 import Search from "@/views/Search";
 import Detail from "@/views/Detail";
 import AddCartSuccess from "@/views/AddCartSuccess";
+import ShopCart from "@/views/ShopCart";
 
 //路由配置信息
 export default [
@@ -56,6 +57,13 @@ export default [
     path: "/addcartsuccess",
     name: "addcartsuccess",
     component: AddCartSuccess,
+    meta: {
+      show: true
+    }
+  },
+  {
+    path: "/shopcart",
+    component: ShopCart,
     meta: {
       show: true
     }
