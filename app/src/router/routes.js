@@ -4,6 +4,7 @@ import Login from "@/views/Login";
 import Register from "@/views/Register";
 import Search from "@/views/Search";
 import Detail from "@/views/Detail";
+import AddCartSuccess from "@/views/AddCartSuccess";
 
 //路由配置信息
 export default [
@@ -46,6 +47,15 @@ export default [
   {
     path: "/Detail/:skuid?",
     component: Detail,
+    meta: {
+      show: true
+    }
+  },
+  {
+    //注意，路由的路径都是小写的，上面都是自己写的，没跟着老师，写了大写，虽然没报错，但是以后还是小写吧
+    path: "/addcartsuccess",
+    name: "addcartsuccess",
+    component: AddCartSuccess,
     meta: {
       show: true
     }
