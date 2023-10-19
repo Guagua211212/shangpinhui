@@ -7,6 +7,7 @@ Vue.use(Vuex);
 import home from "./Home";
 import Search from "./Search";
 import Detail from "./Detail";
+import shopcart from "./ShopCart";
 
 // // state: {},       仓库，存储数据的地方
 // const state = {};
@@ -27,6 +28,7 @@ export default new Vuex.Store({
   modules: {
     home,
     Search,
-    Detail
+    Detail,
+    shopcart
   }
 });
