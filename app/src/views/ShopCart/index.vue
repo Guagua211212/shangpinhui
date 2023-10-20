@@ -74,7 +74,7 @@
         <span>全选</span>
       </div>
       <div class="option">
-        <a href="#none">删除选中的商品</a>
+        <a @click="deleteAllCheckedCart">删除选中的商品</a>
         <a href="#none">移到我的关注</a>
         <a href="#none">清除下柜商品</a>
       </div>
@@ -182,6 +182,16 @@ export default {
       } catch (error) {
         alert(error.message);
       }
+    },
+    //删除选中的全部产品
+    //这个回调函数没法获取到有用的数据
+    async deleteAllCheckedCart() {
+      try {
+        await this.$store.dispatch("deleteAllCheckedCart");
+        this.getData();
+      } catch (error) {
+        alert(error.message);
+      }
     }
   },
   computed: {
@@ -203,9 +213,6 @@ export default {
     isAllCheck() {
       //遍历数组里面的元素，只要全部元素isChecked属性都是1----真
       //只要有一个不是1----假
-      for (let cart of this.cartInfoList) {
-        console.log("====", cart.isChecked);
-      }
       return this.cartInfoList.every(item => item.isChecked == 1);
     }
   }
