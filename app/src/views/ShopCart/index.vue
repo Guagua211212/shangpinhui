@@ -10,7 +10,7 @@
         <div class="cart-th5">小计（元）</div>
         <div class="cart-th6">操作</div>
       </div>
-      <div class="cart-body">
+      <div class="cart-body" v-if="cartInfoList">
         <ul
           class="cart-list"
           v-for="(cart, index) in cartInfoList"
@@ -20,7 +20,8 @@
             <input
               type="checkbox"
               name="chk_list"
-              :isChecked="cart.isChecked == 1"
+              :checked="cart.isChecked"
+              @change="updateChecked(cart, $event)"
             />
           </li>
           <li class="cart-list-con2">
@@ -33,21 +34,34 @@
             <span class="price">{{ cart.skuPrice }}</span>
           </li>
           <li class="cart-list-con5">
-            <a href="javascript:void(0)" class="mins">-</a>
+            <a
+              href="javascript:void(0)"
+              class="mins"
+              @click="handler('minus', -1, cart)"
+            >
+              -
+            </a>
             <input
               autocomplete="off"
               type="text"
               :value="cart.skuNum"
               minnum="1"
               class="itxt"
+              @change="handler('change', $event.target.value * 1, cart)"
             />
-            <a href="javascript:void(0)" class="plus">+</a>
+            <a
+              href="javascript:void(0)"
+              class="plus"
+              @click="handler('add', -1, cart)"
+            >
+              +
+            </a>
           </li>
           <li class="cart-list-con6">
             <span class="sum">{{ cart.skuPrice * cart.skuNum }}</span>
           </li>
           <li class="cart-list-con7">
-            <a href="#none" class="sindelet">删除</a>
+            <a class="sindelet" @click="deleteCartById(cart)">删除</a>
             <br />
             <a href="#none">移到收藏</a>
           </li>
@@ -84,6 +98,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import throttle from "lodash/throttle";
 export default {
   name: "ShopCart",
   mounted() {
@@ -93,6 +108,80 @@ export default {
     //获取个人购物车数据
     getData() {
       this.$store.dispatch("getCartList");
+    },
+    //修改某一个产品的数量【节流】
+    handler: throttle(async function (type, disNum, cart) {
+      //type：为了区分这三个元素
+      //目前disNum这个形参，扮演了几个角色？ +变化量（1） -变化量（1） input最终的个数（并不是变化的量）
+      //cart：哪一个产品
+      console.log(type, disNum, cart);
+      switch (type) {
+        case "add":
+          //带给服务器变化量
+          disNum = 1;
+          break;
+        case "minus":
+          // if (cart.skuNum > 1) {
+          //   disNum = -1;
+          // } else {
+          //   //产品的个数小于等于1
+          //   disNum = 0;
+          // }
+          //用三木运算符代替if语句
+          //判断产品数量大于1，才可以传递给服务器-1，如果出现产品的个数小于等于1，传递给服务器数量0（原封不动）
+          disNum = cart.skuNum > 1 ? -1 : 0;
+          break;
+        case "change":
+          //用户最终输入进来的量，是非法的（带有汉字|出现负数），带给服务器0，表示不变
+          if (isNaN(disNum) || disNum < 1) {
+            disNum = 0;
+          } else {
+            //属于正常情况（小数：取整），带给服务器变化的量  用户输入进来的量-产品起始的量
+            disNum = parseInt(disNum) - cart.skuNum;
+          }
+        //用三目运算符---阅读费劲
+        // disNum =
+        //   isNaN(disNum) || disNum < 1 ? 0 : parseInt(disNum) - cart.skuNum;
+      }
+
+      //派发action
+      try {
+        //代表的是修改成功
+        await this.$store.dispatch("addOrUpdateShopCart", {
+          skuId: cart.skuId,
+          skuNum: disNum
+        });
+        //再一次获取服务器新的数据进行展示
+        this.getData();
+      } catch (error) {}
+    }, 20),
+    //删除某一个产品的操作
+    async deleteCartById(cart) {
+      try {
+        //如果成功，再次发请求展示数据
+        await this.$store.dispatch("deleteCartListBySkuId", cart.skuId);
+        this.getData();
+      } catch (error) {
+        alert(error.message);
+      }
+    },
+    //修改某一个产品勾选的状态
+    async updateChecked(cart, event) {
+      //带给服务器的参数isChecked，不是布尔值，应该是0|1
+      // console.log(event.target.checked);
+      try {
+        //如果修改成功，再次修改服务器的数据
+        // console.log(event.target.checked);
+        let isChecked = event.target.checked ? 1 : 0;
+
+        await this.$store.dispatch("updateCheckedById", {
+          skuId: cart.skuId,
+          isChecked
+        });
+        this.getData();
+      } catch (error) {
+        alert(error.message);
+      }
     }
   },
   computed: {
@@ -114,6 +203,9 @@ export default {
     isAllCheck() {
       //遍历数组里面的元素，只要全部元素isChecked属性都是1----真
       //只要有一个不是1----假
+      for (let cart of this.cartInfoList) {
+        console.log("====", cart.isChecked);
+      }
       return this.cartInfoList.every(item => item.isChecked == 1);
     }
   }

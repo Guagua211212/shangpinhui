@@ -26,7 +26,7 @@ requests.interceptors.request.use(config => {
   if (store.state.Detail.uuid_token) {
     //请求头添加一个字段（userTemId）：和后台老师商量好了
     config.headers.userTempId = store.state.Detail.uuid_token;
-    console.log(config.headers.userTempId);
+    // console.log(config.headers.userTempId);
   }
 
   //进度条开始动

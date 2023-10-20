@@ -1,4 +1,4 @@
-import { reqCartList } from "@/api";
+import { reqCartList, reqDeleteCartById, reqUpdateCheckedById } from "@/api";
 
 const state = {
   cartList: []
@@ -19,12 +19,32 @@ const actions = {
     if (result.code == 200) {
       commit("GETCARTLIST", result.data);
     }
+  },
+
+  //删除购物车某一个产品
+  async deleteCartListBySkuId({ commit }, skuId) {
+    let result = await reqDeleteCartById(skuId);
+    if (result.code == 200) {
+      return "ok";
+    } else {
+      return Promise.reject(new Error("faile"));
+    }
+  },
+
+  //修改购物车某一个产品的选中状态
+  async updateCheckedById({ commit }, { skuId, isChecked }) {
+    let result = await reqUpdateCheckedById(skuId, isChecked);
+    if (result.code == 200) {
+      return "ok";
+    } else {
+      return Promise.reject(new Error("faile"));
+    }
   }
 };
 
 const getters = {
   cartList(state) {
-    return state.cartList[0];
+    return state.cartList[0] || [];
   }
 };
 
