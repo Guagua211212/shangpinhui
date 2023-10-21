@@ -45,17 +45,31 @@ const actions = {
   deleteAllCheckedCart({ dispatch, getters }) {
     //context：小仓库   commit【提交mutation修改state】  getters【计算属性】  dispatch【派发action】  state【当前仓库中的数据】
     //获取购物车中全部勾选产品的信息
-    PromiseAll = [];
+    let PromiseAll = [];
     getters.cartList.cartInfoList.forEach(item => {
+      console.log(item.isChecked);
       let result =
         item.isChecked == 1
           ? dispatch("deleteCartListBySkuId", item.skuId)
           : "";
-      console.log(result); //这里返回的result是一个Promise
+      // console.log(result); //这里返回的result是一个Promise
       PromiseAll.push(result);
     });
     //只要全部的result【promise】都是成功，则返回成功，有一个不成功，则返回失败
     return Promise.all(PromiseAll);
+  },
+
+  //修改全部产品的选中状态
+  updateAllCartIsChecked({ dispatch, state }, isChecked) {
+    let promiseAll = [];
+    state.cartList[0].cartInfoList.forEach(item => {
+      let promise = dispatch("updateCheckedById", {
+        skuId: item.skuId,
+        isChecked
+      });
+      promiseAll.push(promise);
+    });
+    return Promise.all(promiseAll);
   }
 };
 

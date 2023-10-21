@@ -20,7 +20,7 @@
             <input
               type="checkbox"
               name="chk_list"
-              :checked="cart.isChecked"
+              :checked="cart.isChecked == 1"
               @change="updateChecked(cart, $event)"
             />
           </li>
@@ -70,7 +70,12 @@
     </div>
     <div class="cart-tool">
       <div class="select-all">
-        <input class="chooseAll" type="checkbox" :checked="isAllCheck" />
+        <input
+          class="chooseAll"
+          type="checkbox"
+          :checked="isAllCheck && cartInfoList.length > 0"
+          @click="updateAllCartChecked"
+        />
         <span>全选</span>
       </div>
       <div class="option">
@@ -172,7 +177,7 @@ export default {
       try {
         //如果修改成功，再次修改服务器的数据
         // console.log(event.target.checked);
-        let isChecked = event.target.checked ? 1 : 0;
+        let isChecked = event.target.checked ? "1" : "0";
 
         await this.$store.dispatch("updateCheckedById", {
           skuId: cart.skuId,
@@ -188,6 +193,17 @@ export default {
     async deleteAllCheckedCart() {
       try {
         await this.$store.dispatch("deleteAllCheckedCart");
+        this.getData();
+      } catch (error) {
+        alert(error.message);
+      }
+    },
+    //修改全部产品的状态
+    async updateAllCartChecked(event) {
+      let isChecked = event.target.checked ? "1" : "0";
+      try {
+        //派发action
+        await this.$store.dispatch("updateAllCartIsChecked", isChecked);
         this.getData();
       } catch (error) {
         alert(error.message);
