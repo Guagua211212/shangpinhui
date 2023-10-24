@@ -6,7 +6,8 @@
       <div class="container">
         <div class="loginList">
           <p>尚品汇欢迎您！</p>
-          <p>
+          <!-- 未登录 -->
+          <p v-if="!userName">
             <span>请</span>
             <!-- 下面按钮的功能只进行路由跳转，可以用声明式导航 -->
             <!-- <a href="###">登录</a> -->
@@ -14,6 +15,11 @@
             <!-- 声明式导航：无比要有 to 属性 -->
             <router-link to="/Login">登录</router-link>
             <router-link to="/Register" class="register">免费注册</router-link>
+          </p>
+          <!-- 登录 -->
+          <p v-else>
+            <a>{{ userName }}</a>
+            <a class="register" @click="logout">退出登录</a>
           </p>
         </div>
         <div class="typeList">
@@ -130,6 +136,17 @@ export default {
       }
       Object.assign(location.query, { k: this.keyword.toUpperCase() });
       this.$router.push(location);
+    },
+    logout() {
+      //退出登录需要做什么事情
+      //发请求通知服务器退出登录【清除一些数据token】
+      //清楚项目当中的数据【userInfo，token】
+    }
+  },
+  computed: {
+    //用户名信息
+    userName() {
+      return this.$store.state.user.userInfo.name;
     }
   },
   mounted() {

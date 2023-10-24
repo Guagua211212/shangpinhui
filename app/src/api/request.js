@@ -29,6 +29,11 @@ requests.interceptors.request.use(config => {
     // console.log(config.headers.userTempId);
   }
 
+  //判断需要携带 token 带个服务器
+  if (store.state.user.token) {
+    config.headers.token = store.state.user.token;
+  }
+
   //进度条开始动
   nProgress.start();
 

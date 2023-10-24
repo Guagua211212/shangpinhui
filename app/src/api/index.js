@@ -70,3 +70,8 @@ export const reqUserRegister = data =>
 ///api/user/passport/login  post  phone password
 export const reqUserLogin = data =>
   requests({ url: "/user/passport/login", data, method: "post" });
+
+//获取用户的信息【需要带着用户的token向服务器要用户的信息】
+///api/user/passport/auth/getUserInfo  get
+export const reqUserInfo = () =>
+  requests({ url: "/user/passport/auth/getUserInfo", method: "get" });
