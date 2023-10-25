@@ -19,7 +19,7 @@
           <!-- 登录 -->
           <p v-else>
             <a>{{ userName }}</a>
-            <a class="register" @click="logout">退出登录</a>
+            <a class="register" @click="logout()">退出登录</a>
           </p>
         </div>
         <div class="typeList">
@@ -137,10 +137,16 @@ export default {
       Object.assign(location.query, { k: this.keyword.toUpperCase() });
       this.$router.push(location);
     },
-    logout() {
+    async logout() {
       //退出登录需要做什么事情
       //发请求通知服务器退出登录【清除一些数据token】
       //清楚项目当中的数据【userInfo，token】
+      try {
+        //如果退出成功
+        await this.$store.dispatch("userLogout");
+        //回到首页
+        this.$router.push("/home");
+      } catch (error) {}
     }
   },
   computed: {

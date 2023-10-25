@@ -108,7 +108,7 @@ export default {
     ...mapState({
       //右侧需要的是一个函数，当使用这个计算属性的时候会立即执行一次。
       //注入一个参数state，其实际为大仓库中的数据
-      categoryList: state => state.home.categoryList
+      categoryList: state => state.Home.categoryList
     })
   },
   methods: {

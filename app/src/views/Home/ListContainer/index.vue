@@ -109,7 +109,7 @@ export default {
   },
   computed: {
     ...mapState({
-      bannerList: state => state.home.bannerList
+      bannerList: state => state.Home.bannerList
     })
   },
   watch: {

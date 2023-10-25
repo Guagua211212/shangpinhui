@@ -4,7 +4,7 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 
 //引入小仓库
-import home from "./Home";
+import Home from "./Home";
 import Search from "./Search";
 import Detail from "./Detail";
 import shopcart from "./ShopCart";
@@ -27,7 +27,7 @@ export default new Vuex.Store({
   // getters
   //实现vuex仓库模块式开发存储数据
   modules: {
-    home,
+    Home,
     Search,
     Detail,
     shopcart,
