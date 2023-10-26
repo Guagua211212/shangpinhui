@@ -12,6 +12,14 @@ Vue.component(TypeNav.name, TypeNav);
 Vue.component(Carousel.name, Carousel);
 Vue.component(Pagination.name, Pagination);
 
+//引入elementUI
+import { Button, MessageBox } from "element-ui";
+//全局注册方式
+Vue.component(Button.name, Button);
+//ElementUI注册组件的时候还有一种写法，挂在原型上
+Vue.prototype.$msgbox = MessageBox;
+Vue.prototype.$alert = MessageBox.alert;
+
 //引入MockServer.js-----mock数据
 import "@/mock/mockServer";
 
@@ -30,6 +38,10 @@ import store from "./store";
 // import { reqGetSearchInfo } from "@/api";
 // console.log(reqGetSearchInfo({}));
 
+//统一接口api文件夹里的全部请求函数
+//统一引入
+import * as API from "@/api";
+
 Vue.config.productionTip = false;
 
 new Vue({
@@ -37,6 +49,7 @@ new Vue({
   //全局事件总线$bus配置
   beforeCreate() {
     Vue.prototype.$bus = this;
+    Vue.prototype.$API = API;
   },
   //注册路由：底下的写法是    KV一致省略V【router小写的】
   //注册路由信息：当这里书写router的时候，组件身上都拥有$route、$router属性

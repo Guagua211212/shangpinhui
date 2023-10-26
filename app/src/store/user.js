@@ -73,7 +73,7 @@ const actions = {
       //提交用户信息
       commit("GETUSERINFO", result.data);
     } else {
-      return Promise.reject(new Error("faile"));
+      return Promise.reject();
     }
   },
   //退出登录
