@@ -9,6 +9,11 @@ import ShopCart from "@/views/ShopCart";
 import Trade from "@/views/Trade";
 import Pay from "@/views/Pay";
 import PaySuccess from "@/views/PaySuccess";
+import Center from "@/views/Center";
+
+//引入二级路由
+import MyOrder from "@/views/Center/myOrder";
+import GroupOrder from "@/views/Center/groupOrder";
 
 //路由配置信息
 export default [
@@ -91,6 +96,21 @@ export default [
     meta: {
       show: true
     }
+  },
+  {
+    path: "/center",
+    component: Center,
+    meta: {
+      show: true
+    },
+    children: [
+      { path: "myorder", component: MyOrder },
+      { path: "groupOrder", component: GroupOrder },
+      {
+        path: "/center",
+        redirect: "/center/myorder"
+      }
+    ]
   },
   //重定向，在项目跑起来的时候，访问/，立刻定向到首页
   {
