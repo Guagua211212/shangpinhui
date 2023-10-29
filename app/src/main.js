@@ -42,6 +42,16 @@ import store from "./store";
 //统一引入
 import * as API from "@/api";
 
+//引入懒加载用的图片
+import atm from "@/assets/atm.gif";
+//引入图片懒加载插件
+import VueLazyload from "vue-lazyload";
+//注册插件
+Vue.use(VueLazyload, {
+  //懒加载默认的图片
+  loading: atm
+});
+
 Vue.config.productionTip = false;
 
 new Vue({
