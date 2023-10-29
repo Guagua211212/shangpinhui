@@ -52,6 +52,9 @@ Vue.use(VueLazyload, {
   loading: atm
 });
 
+//引入校验插件
+import "@/plugins/validate";
+
 Vue.config.productionTip = false;
 
 new Vue({

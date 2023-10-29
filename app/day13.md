@@ -14,3 +14,48 @@
 只有从支付页面才能跳转到支付成功页面
 
 4、图片懒加载
+自定义插件
+
+5、vee-validate基本使用
+
+第一步：插件安装与引入
+cnpm -i vee-validate@2 --save 安装的插件安装2版本的
+
+import VeeValidate from "vee-validate"
+import zh_CN from "vee-validate/dist/locale/zh_CN"
+Vue.use(VeeValidate)
+
+第二步：提示信息
+VeeValidate.Validator.localize("zh_CN", {
+    messages:{
+        ...zh_CN.message,
+        is:(field)=>`${field}必须与密码相同` // 修改内置规则的message，让确定密码与密码相同
+    },
+    attributes:{
+        //给校验的field属性名映射中文名称
+        phone:"手机号",
+        code:"验证码",
+        password:"密码",
+        password1:"确认密码",
+        isCheck:"协议"
+    }
+})
+
+第三步：基本使用
+<input
+    placeholder="请输入你的手机号"
+    v-model="phone"
+    name="phone"
+    v-validate="{required: true, regex: /^1\d{10}$/ }"
+    :class="{invalid: errors.has('phone')}"
+/>
+<span class="error-msg"> {{ errors.first("phone") }}</span>
+
+const success = await this.\$validate.validateAll();//全部表单验证
+
+VeeValidate.Validator.extend("agree", {
+    validate: value => {
+        return value
+    },
+    getMessage: field => field +"必须同意"
+})
